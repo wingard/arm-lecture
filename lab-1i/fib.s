@@ -13,21 +13,22 @@ fibonacci:
 	@ PROLOG
 	push {r3, r4, r5, lr}
 
-	mov r4, #0
-	mov r5, #1
+        mov r6, #0 @prevPrev
+        mov r7, #1 @prev
+        mov r1, #0 @result
+	mov r2, #2 @i
 
   .L1:
-	cmp r0, #1
-	bgt .L2
+	add r1, r6, r7 @result = prev + prevPrev 
+	mov r6, r7  @ prevPrev = prev
+        mov r7, r1  @ prev = result
+	add r2, r2, #1
 
-        mov r0, r5        
-	pop {r3, r4, r5, pc}		@EPILOG
+	cmp r2, r0
+        ble .L1
+	
+        mov r0, r1
+        pop {r3, r4, r5, pc}            @EPILOG
 
-  .L2:
-	mov r6, r4
-	mov r4, r5
-	add r5, r5, r6
-	sub r0, r0, #1
-	bl .L1
 	.size fibonacci, .-fibonacci
 	.end
